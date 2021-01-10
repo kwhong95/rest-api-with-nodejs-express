@@ -263,3 +263,82 @@ router.patch('/:id', (req, res) => {
 <img width="854" alt="스크린샷 2021-01-10 오후 7 04 51" src="https://user-images.githubusercontent.com/70752848/104119973-ba31bc00-5376-11eb-8e8b-02ea433b4730.png">
 
 > 위처럼 잘 수정된것을 확인할 수 있다.
+
+## 6. Controllers
+> 다양한 기능을 추가하는 Routes를 알아보았다.  
+하지만, 여기서 다양한 기능을 추가하다보면 로직이 너무 길어지고  
+다양해지기 때문에 추후에 수정을 하기 어려워질 수 있다.  
+
+1. controllers 폴더 생성
+2. users.js 생성!
+```js
+import { v4 as uuidv4 } from 'uuid';
+
+export const getUsers = (req, res) => {
+  res.send(users)
+}
+
+export const createUser = (req, res) => {
+  const user = req.body;
+
+  users.push({ ...user, id: uuidv4() });
+
+  res.send(`User with the name ${user.firstName} added to database!`);
+}
+
+export const getUser = (req, res) => {
+  const { id } = req.params;
+
+  const foundUser = users.find((user) => user.id === id);
+
+  res.send(foundUser);
+}
+
+export const deleteUser = (req, res) => {
+  const { id } = req.params;
+
+  users = users.filter((user) => user.id !== id);
+
+  res.send(`User with the id ${id} deleted from the database.`);
+}
+
+export const updateUser = (req, res) => {
+  const { id } = req.params;
+  const { firstName, lastName, age } = req.body;
+  
+  const user = users.find((user) => user.id === id );
+
+  if(firstName) user.firstName = firstName;
+  if(lastName) user.lastName = lastName;
+  if(age) user.age = age;
+
+  res.send(`User with the id ${id} has been Updated`);
+
+ }
+ ```
+ > 기능을 담당하는 부분을 빼서 함수로 만들어 export 해줍니다.
+
+ ```js
+
+import express from 'express';
+
+import { getUsers, createUser, getUser, deleteUser, updateUser } from '../controllers/users.js';
+
+const router = express.Router();
+
+let users = [];
+
+// all routes in here are starting with /users
+router.get('/', getUsers);
+
+router.post('/', createUser);
+
+router.get('/:id', getUser);
+
+router.delete('/:id', deleteUser);
+
+router.patch('/:id', updateUser);
+
+export default router;
+```
+> 위처럼 Route에서 가독성 좋게 구현할 수 있습니다.
