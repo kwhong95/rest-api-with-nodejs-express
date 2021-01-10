@@ -236,3 +236,30 @@ user.id가 입력한 id와 일치하지 않는 즉, false를 반환하므로
 <img width="854" alt="스크린샷 2021-01-10 오후 6 48 03" src="https://user-images.githubusercontent.com/70752848/104119668-61612400-5374-11eb-836d-3bb5292d55f1.png">
 
 > 첫번째 있던 유저가 잘 삭제된 것을 확인할 수 있다.
+
+## 6. Update : PATCH
+```js
+router.patch('/:id', (req, res) => {
+  const { id } = req.params;
+  const { firstName, lastName, age } = req.body;
+  
+  const user = users.find((user) => user.id === id );
+
+  if(firstName) user.firstName = firstName;
+  if(lastName) user.lastName = lastName;
+  if(age) user.age = age;
+
+  res.send(`User with the id ${id} has been Updated`);
+
+ })
+ ```
+ > 입력한 Id가 일치하는 유저의 정보를 Update하는 로직을 구성했다.
+
+ <img width="854" alt="스크린샷 2021-01-10 오후 7 02 24" src="https://user-images.githubusercontent.com/70752848/104119937-72ab3000-5376-11eb-805d-afa8ff99573f.png">
+
+ > 나이를 수정하는 정보를 담고 params에 유저의 고유한 id를 입력해   
+ Patch를 통해 보내주면
+
+<img width="854" alt="스크린샷 2021-01-10 오후 7 04 51" src="https://user-images.githubusercontent.com/70752848/104119973-ba31bc00-5376-11eb-8e8b-02ea433b4730.png">
+
+> 위처럼 잘 수정된것을 확인할 수 있다.
