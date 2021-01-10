@@ -208,3 +208,31 @@ router.get('/:id', (req, res) => {
 
 > 위처럼 params에 고유한 id 번호를 입력해주면  
 특정 사용자의 정보만 빼올 수 있다.
+
+## 5. Delete 
+```js
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+
+  users = users.filter((user) => user.id !== id);
+
+  res.send(`User with the id ${id} deleted from the database.`);
+});
+```
+> user의 고유한 id를 통해서 delete를 구현해한다.  
+user.id가 입력한 id와 일치하지 않는 즉, false를 반환하므로  
+배열에서 삭제시킨다는 filter를 이용한다.
+
+> 주의!! const 로 설정한 users의 초기 배열을 let으로 변경해야 합니다!
+
+<img width="853" alt="스크린샷 2021-01-10 오후 6 42 17" src="https://user-images.githubusercontent.com/70752848/104119577-9325bb00-5373-11eb-9130-100896fa41a3.png">
+
+> 첫번째 유저의 id로 Delete를 실행해보자.
+
+<img width="854" alt="스크린샷 2021-01-10 오후 6 46 34" src="https://user-images.githubusercontent.com/70752848/104119649-2c54d180-5374-11eb-9cb4-312631853fdb.png">
+
+> id를 param에 담아 Delete를 실행하면,
+
+<img width="854" alt="스크린샷 2021-01-10 오후 6 48 03" src="https://user-images.githubusercontent.com/70752848/104119668-61612400-5374-11eb-836d-3bb5292d55f1.png">
+
+> 첫번째 있던 유저가 잘 삭제된 것을 확인할 수 있다.
