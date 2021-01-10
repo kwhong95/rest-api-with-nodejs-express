@@ -142,3 +142,69 @@ router.post('/', (req, res) => {
 > 잘 들어간 것을 확인 할 수 있다.  
 하지만, DB를 연동시키지 않았으므로 저장되어 영구적으로 되지 않는다  
 지금은 Node & Express에 집중하고 추후에 DB와 연동시키도록 하자.
+
+## 4. 특정 유저의 정보를 구별하여 가져오기
+### 4.1 고유한 ID 설정하기
+> 우리가 설정한 유저의 정보는 고유한 ID를 가지기 어렵다  
+성이나 이름은 다른 유저들과 겹치는 경우가 있기 때문이다.  
+그래서 유저별로 고유한 아이디를 얻기 위해서 uuid를 활용해보자.
+
+1. uuid 설치하기
+```
+npm i uuid
+```
+
+2. uuid와 함께 데이터 전송 
+```js
+import v4 as uuidv4 from 'uuid';
+
+router.post('/', (req, res) => {
+  const user = req.body;
+
+  users.push({ ...user, id: uuidv4() });
+  // ...
+});
+```
+
+> 이렇게 Spread 연산자로 유저의 나머지 정보를 가져오고  
+uuid version4 를 넣어서 데이터를 전송해준다.
+
+
+3. 결과 확인하기
+
+> 먼저, 기존에 있는 데이터를 빈 배열로 바꾸어준다.
+
+<img width="855" alt="스크린샷 2021-01-10 오후 6 08 50" src="https://user-images.githubusercontent.com/70752848/104118791-ea755c80-536e-11eb-8b0f-800fc57c4893.png">
+
+> 이전과 같이 데이터를 보내주면?
+
+<img width="855" alt="스크린샷 2021-01-10 오후 6 09 57" src="https://user-images.githubusercontent.com/70752848/104118809-0e38a280-536f-11eb-9236-0214e28d1666.png">
+
+> uuid의 고유한 id 정보와 함께 데이터가 전송된 것을 확인할 수 있다.
+
+### 4.2 사용자의 Id로 구분하여 데이터 가져오기
+
+```js
+// /users/2 ==> req.params { id: 2 }
+router.get('/:id', (req, res) => {
+  console.log(req.params);
+
+  res.send(req.params);
+});
+```
+
+> 위처럼 params를 활용해서 구분하는 방법이 있다.
+
+<img width="454" alt="스크린샷 2021-01-10 오후 6 16 53" src="https://user-images.githubusercontent.com/70752848/104118986-06c5c900-5370-11eb-9ed3-8b2ccb23bb91.png">
+
+> 이렇게 params에 고유한 id를 넣어주면 그 아이디에 따른 값을  
+반환할 것이라고 예상할 수 있다.
+
+<img width="454" alt="스크린샷 2021-01-10 오후 6 23 04" src="https://user-images.githubusercontent.com/70752848/104119129-e4807b00-5370-11eb-9462-8123df20f79e.png">
+
+> 위의 데이터에서 고유한 id를 param으로 넣어 유저정보를 가져오도록 해보자.
+
+<img width="594" alt="스크린샷 2021-01-10 오후 6 24 50" src="https://user-images.githubusercontent.com/70752848/104119172-23163580-5371-11eb-9d98-b3838bfb00df.png">
+
+> 위처럼 params에 고유한 id 번호를 입력해주면  
+특정 사용자의 정보만 빼올 수 있다.
